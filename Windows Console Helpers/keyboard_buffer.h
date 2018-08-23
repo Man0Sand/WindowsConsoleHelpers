@@ -2,6 +2,7 @@
 #define KEYBOARD_BUFFER_H
 
 #include <Windows.h>
+#include <vector>
 
 namespace keyboardbuffer
 {
@@ -15,9 +16,14 @@ namespace keyboardbuffer
     const WORD kEsc = 27;
     const WORD kBackspace = 8;
     const WORD kE = 69;
+    const WORD kOne = 49;
+    const WORD kTwo = 50;
+    const WORD kThree = 51;
 
     void ReadInput();
     bool IsInput(const WORD& key);
+    void WaitUntilInput(std::vector<WORD> allowed_input);
+    char GetInput();
 }
 
 namespace
@@ -28,7 +34,7 @@ namespace
         KeyboardBuffer();
         ~KeyboardBuffer();
         void ReadInput();
-        bool IsInput(const WORD& key);
+        WORD GetInput();
 
     private:
         HANDLE handle_;

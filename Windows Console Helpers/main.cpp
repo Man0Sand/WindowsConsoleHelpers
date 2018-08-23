@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "keyboard_buffer.h"
 
@@ -29,5 +30,6 @@ void try_keyboard_buffer()
 
 int main(void)
 {
-    try_keyboard_buffer();
+    //try_keyboard_buffer();
+    keyboardbuffer::WaitUntilInput({ keyboardbuffer::kEnter });
 }

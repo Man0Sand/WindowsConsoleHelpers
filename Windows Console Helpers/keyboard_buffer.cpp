@@ -1,3 +1,6 @@
+#include <vector>
+#include <unordered_map>
+
 #include "keyboard_buffer.h"
 
 static KeyboardBuffer keyboard_buffer;
@@ -11,7 +14,36 @@ namespace keyboardbuffer
 
     bool IsInput(const WORD& key)
     {
-        return keyboard_buffer.IsInput(key);
+        return keyboard_buffer.GetInput() == key;
+    }
+
+    char GetInput()
+    {
+        static std::unordered_map<WORD, char> key_mappings = { {kOne, '1'}, {kTwo, '2'}, {kThree, '3'}};
+        WORD user_input = keyboard_buffer.GetInput();
+        if (key_mappings.count(user_input))
+        {
+            return key_mappings[user_input];
+        }
+        else
+        {
+            return kNone;
+        }
+    }
+
+    void WaitUntilInput(std::vector<WORD> allowed_input)
+    {
+        while (true)
+        {
+            ReadInput();
+            for (WORD user_input : allowed_input)
+            {
+                if (IsInput(user_input))
+                {
+                    return;
+                }
+            }
+        }
     }
 }
 
@@ -46,8 +78,8 @@ namespace
         key_pressed_ = buffer_.Event.KeyEvent.wVirtualKeyCode;
     }
 
-    bool KeyboardBuffer::IsInput(const WORD & key)
+    WORD KeyboardBuffer::GetInput()
     {
-        return key_pressed_ == key;
+        return key_pressed_;
     }
 }
