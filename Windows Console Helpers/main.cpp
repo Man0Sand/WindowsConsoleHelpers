@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "keyboard_buffer.h"
+#include "screen_buffer.h"
 
 void try_keyboard_buffer()
 {
@@ -28,8 +29,19 @@ void try_keyboard_buffer()
     }
 }
 
+
+
 int main(void)
 {
     //try_keyboard_buffer();
+    screenbuffer::SetCursorPosition(10, 20);
+    std::cout << "position 10 , 20\n";
     keyboardbuffer::WaitUntilInput({ keyboardbuffer::kEnter });
+    screenbuffer::ClearScreen();
+    keyboardbuffer::WaitUntilInput({ keyboardbuffer::kEnter });
+    std::cout << "position 0,0\n";
+    keyboardbuffer::WaitUntilInput({ keyboardbuffer::kEnter });
+
+
+
 }

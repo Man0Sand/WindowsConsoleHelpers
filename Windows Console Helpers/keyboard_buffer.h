@@ -26,22 +26,4 @@ namespace keyboardbuffer
     char GetInput();
 }
 
-namespace
-{
-    class KeyboardBuffer
-    {
-    public:
-        KeyboardBuffer();
-        ~KeyboardBuffer();
-        void ReadInput();
-        WORD GetInput();
-
-    private:
-        HANDLE handle_;
-        DWORD events_;
-        INPUT_RECORD buffer_;
-        WORD key_pressed_;
-    };
-}
-
 #endif // KEYBOARD_BUFFER_H

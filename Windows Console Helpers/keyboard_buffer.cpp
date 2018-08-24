@@ -3,7 +3,25 @@
 
 #include "keyboard_buffer.h"
 
-static KeyboardBuffer keyboard_buffer;
+namespace
+{
+    class KeyboardBuffer
+    {
+    public:
+        KeyboardBuffer();
+        ~KeyboardBuffer();
+        void ReadInput();
+        WORD GetInput();
+
+    private:
+        HANDLE handle_;
+        DWORD events_;
+        INPUT_RECORD buffer_;
+        WORD key_pressed_;
+    };
+    
+    KeyboardBuffer keyboard_buffer;
+}
 
 namespace keyboardbuffer
 {
