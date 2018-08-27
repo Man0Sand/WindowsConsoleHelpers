@@ -3,8 +3,11 @@
 
 namespace screenbuffer
 {
-    void SetCursorPosition(int x, int y);
+    void SetCursorPosition(const int& x, const int& y);
+    void GetCursorPosition(int* x, int* y);
+    int GetCursorRow();
     void ClearScreen();
+    void ClearRow();
 }
 
 #endif // SCREEN_BUFFER_H

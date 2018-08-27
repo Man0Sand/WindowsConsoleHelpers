@@ -1,6 +1,6 @@
-#include "screen_buffer.h"
-
 #include <Windows.h>
+
+#include "screen_buffer.h"
 
 namespace
 {
@@ -11,6 +11,8 @@ namespace
         ~ScreenBuffer();
         void SetCursorPosition(COORD coordinates);
         void ClearScreen();
+        COORD GetCursorPosition();
+        void ClearRow();
 
     private:
         HANDLE handle_;
@@ -21,15 +23,34 @@ namespace
 
 namespace screenbuffer
 {
-    void SetCursorPosition(int x, int y)
+    void SetCursorPosition(const int& x, const int& y)
     {
         COORD coordinates = { static_cast<SHORT>(x), static_cast<SHORT>(y) };
         screen_buffer.SetCursorPosition(coordinates);
     }
 
+    void GetCursorPosition(int* x, int* y)
+    {
+        COORD coordinates = screen_buffer.GetCursorPosition();
+        *x = coordinates.X;
+        *y = coordinates.Y;
+    }
+
+    int GetCursorRow()
+    {
+        int x, y;
+        GetCursorPosition(&x, &y);
+        return y;
+    }
+
     void ClearScreen()
     {
         screen_buffer.ClearScreen();
+    }
+
+    void ClearRow()
+    {
+        screen_buffer.ClearRow();
     }
 }
 
@@ -38,6 +59,10 @@ namespace
     ScreenBuffer::ScreenBuffer() :
         handle_(GetStdHandle(STD_OUTPUT_HANDLE))
     {
+        CONSOLE_CURSOR_INFO cursor_info;
+        GetConsoleCursorInfo(handle_, &cursor_info);
+        cursor_info.bVisible = false;
+        SetConsoleCursorInfo(handle_, &cursor_info);
     }
 
     ScreenBuffer::~ScreenBuffer()
@@ -57,6 +82,27 @@ namespace
         DWORD number_of_cells = buffer_info.dwSize.X * buffer_info.dwSize.Y;
         TCHAR fill_character = ' ';
         COORD beginning_point = { 0,0 };
+        DWORD number_of_inserted_characters;
+        FillConsoleOutputCharacter(handle_, fill_character, number_of_cells, beginning_point, &number_of_inserted_characters);
+
+        SetCursorPosition(beginning_point);
+    }
+
+    COORD ScreenBuffer::GetCursorPosition()
+    {
+        CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+        GetConsoleScreenBufferInfo(handle_, &buffer_info);
+        return buffer_info.dwCursorPosition;
+    }
+
+    void ScreenBuffer::ClearRow()
+    {
+        CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+        GetConsoleScreenBufferInfo(handle_, &buffer_info);
+
+        DWORD number_of_cells = buffer_info.dwSize.X;
+        TCHAR fill_character = ' ';
+        COORD beginning_point = { 0, GetCursorPosition().Y };
         DWORD number_of_inserted_characters;
         FillConsoleOutputCharacter(handle_, fill_character, number_of_cells, beginning_point, &number_of_inserted_characters);
 
