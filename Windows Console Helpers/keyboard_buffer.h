@@ -1,28 +1,27 @@
 #ifndef KEYBOARD_BUFFER_H
 #define KEYBOARD_BUFFER_H
 
-#include <Windows.h>
 #include <vector>
 
 namespace keyboardbuffer
 {
-    const WORD kNone = 0;
-    const WORD kArrowUp = 38;
-    const WORD kArrowDown = 40;
-    const WORD kArrowLeft = 37;
-    const WORD kArrowRight = 39;
-    const WORD kSpace = 32;
-    const WORD kEnter = 13;
-    const WORD kEsc = 27;
-    const WORD kBackspace = 8;
-    const WORD kE = 69;
-    const WORD kOne = 49;
-    const WORD kTwo = 50;
-    const WORD kThree = 51;
+    const int kNone = 0;
+    const int kArrowUp = 38;
+    const int kArrowDown = 40;
+    const int kArrowLeft = 37;
+    const int kArrowRight = 39;
+    const int kSpace = 32;
+    const int kEnter = 13;
+    const int kEsc = 27;
+    const int kBackspace = 8;
+    const int kE = 69;
+    const int kOne = 49;
+    const int kTwo = 50;
+    const int kThree = 51;
 
     void ReadInput();
-    bool IsInput(const WORD& key);
-    void WaitUntilInput(std::vector<WORD> allowed_input);
+    bool IsInput(const int& key);
+    void WaitUntilInput(std::vector<int> allowed_input);
     char GetInput();
 }
 

@@ -1,5 +1,5 @@
-#include <vector>
 #include <unordered_map>
+#include <Windows.h>
 
 #include "keyboard_buffer.h"
 
@@ -30,9 +30,9 @@ namespace keyboardbuffer
         keyboard_buffer.ReadInput();
     }
 
-    bool IsInput(const WORD& key)
+    bool IsInput(const int& key)
     {
-        return keyboard_buffer.GetInput() == key;
+        return keyboard_buffer.GetInput() == static_cast<WORD>(key);
     }
 
     char GetInput()
@@ -49,12 +49,12 @@ namespace keyboardbuffer
         }
     }
 
-    void WaitUntilInput(std::vector<WORD> allowed_input)
+    void WaitUntilInput(std::vector<int> allowed_input)
     {
         while (true)
         {
             ReadInput();
-            for (WORD user_input : allowed_input)
+            for (int user_input : allowed_input)
             {
                 if (IsInput(user_input))
                 {
