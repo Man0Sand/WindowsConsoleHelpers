@@ -8,6 +8,7 @@ namespace screenbuffer
     int GetCursorRow();
     void ClearScreen();
     void ClearRow();
+    void InvertColors();
 }
 
 #endif // SCREEN_BUFFER_H

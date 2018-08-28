@@ -13,6 +13,7 @@ namespace
         void ClearScreen();
         COORD GetCursorPosition();
         void ClearRow();
+        void InvertColors();
 
     private:
         HANDLE handle_;
@@ -52,6 +53,11 @@ namespace screenbuffer
     {
         screen_buffer.ClearRow();
     }
+
+    void InvertColors()
+    {
+        screen_buffer.InvertColors();
+    }
 }
 
 namespace
@@ -84,6 +90,7 @@ namespace
         COORD beginning_point = { 0,0 };
         DWORD number_of_inserted_characters;
         FillConsoleOutputCharacter(handle_, fill_character, number_of_cells, beginning_point, &number_of_inserted_characters);
+        FillConsoleOutputAttribute(handle_, buffer_info.wAttributes, number_of_cells, beginning_point, &number_of_inserted_characters);
 
         SetCursorPosition(beginning_point);
     }
@@ -107,5 +114,19 @@ namespace
         FillConsoleOutputCharacter(handle_, fill_character, number_of_cells, beginning_point, &number_of_inserted_characters);
 
         SetCursorPosition(beginning_point);
+    }
+
+    void ScreenBuffer::InvertColors()
+    {
+        CONSOLE_SCREEN_BUFFER_INFO buffer_info;
+        GetConsoleScreenBufferInfo(handle_, &buffer_info);
+        WORD attributes = buffer_info.wAttributes;
+        WORD background_attributes = (BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE);
+        WORD text_attributes = (FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
+        WORD mask = background_attributes | text_attributes;
+        WORD inverted_desired_bits = (attributes & mask)^mask;
+        attributes &= ~mask;
+        attributes |= inverted_desired_bits;
+        SetConsoleTextAttribute(handle_, attributes);
     }
 }
